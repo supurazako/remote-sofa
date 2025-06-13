@@ -13,7 +13,7 @@ assignees: ''
 ## Expected behavior
 <!-- A clear and concise description of what you expected to happen. -->
 
-# Actual behavior
+## Actual behavior
 <!-- A clear and concise description of what actually happened. -->
 
 ## To Reproduce
@@ -26,7 +26,7 @@ assignees: ''
 ## Screenshots
 <!-- If applicable, add screenshots to help explain your problem. -->
 
-## Enviroment
+## Environment
 
 - OS: [e.g. iOS]
 - Device: (if using mobile)
