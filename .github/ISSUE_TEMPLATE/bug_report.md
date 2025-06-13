@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: '[BUG] '
 labels: bug
 assignees: ''
 
@@ -13,6 +13,9 @@ assignees: ''
 ## Expected behavior
 <!-- A clear and concise description of what you expected to happen. -->
 
+# Actual behavior
+<!-- A clear and concise description of what actually happened. -->
+
 ## To Reproduce
 <!-- Steps to reproduce the behavior: -->
 1. Go to '...'
@@ -23,11 +26,12 @@ assignees: ''
 ## Screenshots
 <!-- If applicable, add screenshots to help explain your problem. -->
 
-## Enviroment (please complete the following information):
- - OS: [e.g. iOS]
- - Device: (if using mobile)
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Enviroment
+
+- OS: [e.g. iOS]
+- Device: (if using mobile)
+- Browser [e.g. chrome, safari]
+- Version [e.g. 22]
 
 ## Additional context
 <!-- Add any other context about the problem here. -->
