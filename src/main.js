@@ -37,7 +37,7 @@ input.addEventListener('change', function (e) {
     },
     // Callback for once the upload is completed
     onSuccess: function () {
-      console.log('Download %s from %s', upload.file.name, upload.url)
+      console.log('Upload %s from %s', upload.file.name, upload.url)
     },
   })
 
