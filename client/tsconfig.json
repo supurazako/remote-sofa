@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "esnext", // ESmodule
+    "strict": true, // strict type check
+    "esModuleInterop": true, // TypeScript treats CommonJS/AMD/UMD modules similar to ES6 modules.
+    "skipLibCheck": true, // skip depencies type check(for reduce build time)
+    "forceConsistentCasingInFileNames": true, // file name case(e.g. OK: FileName.ts, NG: filename.ts)
+    "outDir": "./dist", // compiled file's distnation dir
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+}
