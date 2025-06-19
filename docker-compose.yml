@@ -6,3 +6,9 @@ services:
       - "1337:8080"
     volumes:
       - ./tusd-data:/srv/tusd-data
+    networks:
+      - tusd
+
+networks:
+  tusd:
+    driver: bridge
