@@ -1,6 +1,6 @@
 services:
   tusd:
-    image: tusproject/tusd:latest
+    image: tusproject/tusd:v2.8.0
     container_name: tusd
     ports:
       - "1337:8080"
