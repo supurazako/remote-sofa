@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "esnext", // ESmodule
-    "strict": true, // strict type check
-    "esModuleInterop": true, // TypeScript treats CommonJS/AMD/UMD modules similar to ES6 modules.
-    "skipLibCheck": true, // skip depencies type check(for reduce build time)
-    "forceConsistentCasingInFileNames": true, // file name case(e.g. OK: FileName.ts, NG: filename.ts)
-    "outDir": "./dist", // compiled file's distnation dir
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["src"]
 }
