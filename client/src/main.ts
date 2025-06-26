@@ -1,54 +1,51 @@
-import * as tus from 'https://cdn.jsdelivr.net/npm/tus-js-client/+esm';
+import { Upload, type UploadOptions, type PreviousUpload } from 'tus-js-client';
 
-const input = document.getElementById('fileInput');
-const progressBar = document.getElementById('progressBar');
-const progressPercent = document.getElementById('progressPercent');
-const progressContainer = document.getElementById('progressContainer');
+const input = document.getElementById('fileInput') as HTMLInputElement;
+const progressBar = document.getElementById('progressBar') as HTMLProgressElement;
+const progressPercent = document.getElementById('progressPercent') as HTMLElement;
+const progressContainer = document.getElementById('progressContainer') as HTMLElement;
 
-input.addEventListener('change', function (e) {
+input.addEventListener('change', (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) {
+    console.error('No file selected');
+    return;
+  }
+
   progressContainer.style.display = 'block';
 
-  // Get the selected file from the input element
-  const file = e.target.files[0]
-
   // Create a new tus upload
-  const upload = new tus.Upload(file, {
-    // endpoint URL for the tusd server
+  const options: UploadOptions = {
     endpoint: 'http://localhost:1337/files/',
-    // Retry delays will enable tus-js-client to automatically retry on errors
     retryDelays: [0, 3000, 5000, 10000, 20000],
-    // Attach additional meta data about the file for the server
     metadata: {
       filename: file.name,
       filetype: file.type,
     },
-    // Callback for errors which cannot be fixed using retries
-    onError: function (error) {
+    onError: function (error: Error) {
       console.log('Failed because: ' + error)
     },
-    // Callback for reporting upload progress
-    onProgress: function (bytesUploaded, bytesTotal) {
+    onProgress: function (bytesUploaded: number, bytesTotal: number) {
       const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
       console.log(bytesUploaded, bytesTotal, percentage + '%')
 
-      // progress bar
-      progressBar.value  =percentage;
+      progressBar.value  = parseFloat(percentage);
       progressPercent.textContent = percentage + '%';
     },
-    // Callback for once the upload is completed
     onSuccess: function () {
-      console.log('Upload %s from %s', upload.file.name, upload.url)
+      console.log("Success upload");
     },
-  })
+  };
+
+  // create a new upload instance
+  const upload = new Upload(file, options);
 
   // Check if there are any previous uploads to continue.
-  upload.findPreviousUploads().then(function (previousUploads) {
-    // Found previous uploads so we select the first one.
+  upload.findPreviousUploads().then((previousUploads: PreviousUpload[]) => {
     if (previousUploads.length) {
-      upload.resumeFromPreviousUpload(previousUploads[0])
+      upload.resumeFromPreviousUpload(previousUploads[0]);
     }
-
-    // Start the upload
-    upload.start()
-  })
-})
+    upload.start();
+  });
+});
