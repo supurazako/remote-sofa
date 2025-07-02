@@ -39,3 +39,19 @@ func TestConvertToHLS(t *testing.T) {
 
 	t.Logf("Found %d segment files.", len(segmentFiles))
 }
+
+func TestConvertToHLS_InputFileNotFound(t *testing.T) {
+	nonExsitentFile := filepath.Join("testdata", "non_existent.mp4")
+	outputDir, err := os.MkdirTemp("", "hls_test_output_*")
+	if err != nil {
+		t.Fatalf("Fialed to create temporary directory: %v", err)
+	}
+	t.Cleanup(func() { os.RemoveAll(outputDir) })
+
+	err = ConvertToHLS(nonExsitentFile, outputDir)
+	if err == nil {
+		t.Errorf("expected an error for non-existent input file, but got nil")
+	} else {
+		t.Logf("Successfully caught expected error: %v", err)
+	}
+}
