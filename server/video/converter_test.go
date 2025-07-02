@@ -55,3 +55,30 @@ func TestConvertToHLS_InputFileNotFound(t *testing.T) {
 		t.Logf("Successfully caught expected error: %v", err)
 	}
 }
+
+func TestConvertToHLS_FfmpegError(t *testing.T) {
+	// Purpose: invalid or empty input file to trigger ffmpeg error
+	invalidFile := filepath.Join("testdata", "invalid_video.mp4")
+
+	// Create a dummy invalid file if it does not exist
+	if _, err := os.Stat(invalidFile); os.IsNotExist(err) {
+		if f, err := os.Create(invalidFile); err != nil {
+			t.Fatalf("Fialed to create dummy invalid file: %v", err)
+		} else {
+			f.Close()
+		}
+	}
+
+	outputDir, err := os.MkdirTemp("", "hls_test_output_*")
+	if err != nil {
+		t.Fatalf("Failed to crete temporary directory: %v", err)
+	}
+	t.Cleanup(func() { os.RemoveAll(outputDir) })
+
+	err = ConvertToHLS(invalidFile, outputDir)
+	if err == nil {
+		t.Errorf("expected an error from ffmpeg execution, but got nil")
+	} else {
+		t.Logf("Successfully caught expected ffmpeg error: %v", err)
+	}
+}
