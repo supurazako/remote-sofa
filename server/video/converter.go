@@ -2,31 +2,40 @@ package video
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 )
 
+// var for HLS convert
+const (
+	hlsTime = "10" // target segment length. default is 2
+	hlsListSize = "0" // mazimum number of playlist entries. if 0, list file will contain all the segments.
+	hlsSegmentFilename = "segment%03d.ts"
+	playlistFilename = "playlist.m3u8"
+)
+
 // NOTE: This function is call "ffmpeg" to convert video -> HLS files.
 func ConvertToHLS(inputFile, outputDir string) error {
+	// Ensure input file exist
+	if _, err := os.Stat(inputFile); os.IsNotExist(err) {
+		return fmt.Errorf("input file not found: %s", inputFile)
+	}
+
 	// Create master playlist file path
-	playlistPath := filepath.Join(outputDir, "playlist.m3u8")
+	playlistPath := filepath.Join(outputDir, playlistFilename)
+	segmentPath := filepath.Join(outputDir, hlsSegmentFilename)
 
 	// ffmpeg command arguments
 	// reference: https://ffmpeg.org/ffmpeg-formats.html#hls-2, https://ffmpeg.org/ffmpeg.html#toc-Main-options
-	// -i: input file
-	// -c:a copy -c:v copy: audio and video codecs to copy without re-encoding
-	// -f hls: specify the output format as HLS
-	// -hls_time [duration]: target segment length. default is 2
-	// -hls_list_size [size]: mazimum number of playlist entries. if 0, list file will contain all the segments.
-	// -hls_segment_filename [filename]: segment filename.
 	cmd := exec.Command("ffmpeg",
 		"-i", inputFile,
 		"-c:a", "copy",
 		"-c:v", "copy",
 		"-f", "hls",
-		"-hls_time", "10",
-		"-hls_list_size", "0",
-		"-hls_segment_filename", filepath.Join(outputDir, "segment%03d.ts"),
+		"-hls_time", hlsTime,
+		"-hls_list_size", hlsListSize,
+		"-hls_segment_filename", segmentPath,
 		playlistPath,
 	)
 
