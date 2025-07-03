@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/supurazako/remote-sofa/server/video"
 )
 
 type State int
@@ -62,7 +64,7 @@ func (m *Manager) Startconversion(sessionID, inputFile string) {
 		if err != nil {
 			m.updateStatusToFailed(sessionID, err)
 		} else {
-			playlistPath := filepath.Join(outputDir, "playlist.m3u8")
+			playlistPath := filepath.Join(outputDir, video.PlaylistFilename)
 			m.updateStatusToCompleted(sessionID, playlistPath)
 		}
 	}()

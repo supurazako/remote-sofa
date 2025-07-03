@@ -12,7 +12,7 @@ const (
 	hlsTime = "10" // target segment length. default is 2
 	hlsListSize = "0" // mazimum number of playlist entries. if 0, list file will contain all the segments.
 	hlsSegmentFilename = "segment%03d.ts"
-	playlistFilename = "playlist.m3u8"
+	PlaylistFilename = "playlist.m3u8"
 )
 
 // NOTE: This function is call "ffmpeg" to convert video -> HLS files.
@@ -23,7 +23,7 @@ func ConvertToHLS(inputFile, outputDir string) error {
 	}
 
 	// Create master playlist file path
-	playlistPath := filepath.Join(outputDir, playlistFilename)
+	playlistPath := filepath.Join(outputDir, PlaylistFilename)
 	segmentPath := filepath.Join(outputDir, hlsSegmentFilename)
 
 	// ffmpeg command arguments
