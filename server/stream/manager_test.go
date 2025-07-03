@@ -8,7 +8,7 @@ import (
 )
 
 func TestStreamManger(t *testing.T) {
-	t.Run("SUccessful conversion", func(t *testing.T) {
+	t.Run("Successful conversion", func(t *testing.T) {
 		// SET UP
 		var wg sync.WaitGroup
 		wg.Add(1) // wait for the goroutine complete

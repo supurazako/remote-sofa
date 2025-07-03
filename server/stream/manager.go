@@ -24,7 +24,7 @@ type Status struct {
 	Error			error
 }
 
-// kore nazo
+// for DI
 type ConverterFunc func(inputFile, outputDir string) error
 
 type Manager struct {
