@@ -99,8 +99,12 @@ func TestStreamStatusHandler(t *testing.T) {
 		handler.ServeHTTP(rr, req)
 
 		// ASSERT
-		if rr.Code != http.StatusNotFound {
-			t.Errorf("expected status code %d, but got %d", http.StatusNotFound, rr.Code)
+		var respBody map[string]string
+		if err := json.Unmarshal(rr.Body.Bytes(), &respBody); err != nil {
+			t.Fatalf("failed to unmarshal response body: %v", err)
+		}
+		if respBody["error"] != "session not found" {
+			t.Errorf("expected error message 'session not found', but got '%s'", respBody["error"])
 		}
 	})
 }

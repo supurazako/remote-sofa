@@ -26,30 +26,38 @@ func(h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	status, err := h.manager.GetStatus(sessionID)
 	if err != nil {
-		http.Error(w, `{"error": "session not found"}`, http.StatusNotFound)
+		respondJSON(w, http.StatusNotFound, map[string]string{"error": "session not found"})
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-
 	switch status.State {
 	case stream.StateProcessing:
-		w.WriteHeader(http.StatusAccepted)
-		json.NewEncoder(w).Encode(map[string]string{
+		respondJSON(w, http.StatusAccepted, map[string]string{
 			"status": status.State.String(),
 		})
-
 	case stream.StateCompleted:
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{
+		respondJSON(w, http.StatusOK, map[string]string {
 			"status":	status.State.String(),
 			"url":		status.PlaylistPath,
 		})
+	case stream.StateFailed:
+		respondJSON(w, http.StatusInternalServerError, map[string]string{
+			"status": status.State.String(),
+			"error":  status.Error.Error(),
+		})
 	default:
 		// unexpected case
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(map[string]string{
+		respondJSON(w, http.StatusInternalServerError, map[string]string{
 			"error": "unknown session state",
 		})
+	}
+}
+
+// helper func for JSON response
+func respondJSON(w http.ResponseWriter, statusCode int, payload interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	if payload != nil {
+		json.NewEncoder(w).Encode(payload)
 	}
 }
