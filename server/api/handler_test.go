@@ -21,7 +21,7 @@ func (m *mockStreamManager) GetStatus(sessionID string) (*stream.Status, error) 
 // In test, do not use StartConversion. so blank
 func (m *mockStreamManager) StartConversion(sessionID, inputFile string) {}
 
-func TestStreamHandler(t *testing.T) {
+func TestStreamStatusHandler(t *testing.T) {
 	t.Run("should return 202 when status is processing", func(t *testing.T) {
 		// SET UP
 		mockManager := &mockStreamManager{
@@ -29,7 +29,7 @@ func TestStreamHandler(t *testing.T) {
 		}
 		handler := NewHandler(mockManager)
 
-		req := httptest.NewRequest("GET", "/api/session/test-session/stream", nil)
+		req := httptest.NewRequest("GET", "/api/sessions/test-session/stream", nil)
 		rr := httptest.NewRecorder()
 
 		// EXECUTE
@@ -38,6 +38,36 @@ func TestStreamHandler(t *testing.T) {
 		// ASSERT
 		if rr.Code != http.StatusAccepted {
 			t.Errorf("expected status code %d, but got %d", http.StatusAccepted, rr.Code)
+		}
+
+		var respBody map[string]string
+		if err := json.Unmarshal(rr.Body.Bytes(), &respBody); err != nil {
+			t.Fatalf("failed to unmarshal response body: %v", err)
+		}
+		if respBody["status"] != "Processing" {
+			t.Errorf("expected status 'Processing', but got '%s'", respBody["status"])
+		}
+	})
+
+	t.Run("should return 200 with URL when status is completed", func(t *testing.T) {
+		// SET UP
+		mockManager := &mockStreamManager{
+			status: &stream.Status{
+				State:			stream.StateCompleted,
+				PlaylistPath:	"/streams/test-session/playlist.m3u8",
+			},
+		}
+		handler := NewHandler(mockManager)
+
+		req := httptest.NewRequest("GET", "/api/sessions/test-session/stream", nil)
+		rr := httptest.NewRecorder()
+
+		// EXECUTE
+		handler.ServeHTTP(rr, req)
+
+		// ASSERT
+		if rr.Code != http.StatusOK {
+			t.Errorf("expected status code %d, but got %d", http.StatusOK, rr.Code)
 		}
 
 		var respBody map[string]string
